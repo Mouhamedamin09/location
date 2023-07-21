@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Data</title>
+</head>
+<body>
+    <div id="location"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        // Set latitude and longitude to the 'location' div
+                        document.getElementById("location").innerText = `Latitude: ${latitude}, Longitude: ${longitude}`;
+
+                        const apiUrl =`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+                        fetch(apiUrl)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                        })
+                    },
+                    function (error) {
+                        console.error("Error getting location:", error.message);
+                        document.getElementById("location").innerText = "Unable to fetch your location.";
+                    }
+                );
+            } else {
+                document.getElementById("location").innerText = "Geolocation is not supported in your browser.";
+            }
+        });
+    </script>
+</body>
+</html>
